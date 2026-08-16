@@ -6,10 +6,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.health import router as health_router
 from app.core.config import settings
+from app.middleware.error_handler import register_exception_handlers
 
 
 def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name)
+    register_exception_handlers(app)
 
     app.add_middleware(
         CORSMiddleware,
