@@ -12,16 +12,14 @@ export function SectionReviews({ sections }: SectionReviewsProps) {
   return (
     <section>
       <div className="mb-4">
-        <p className="text-sm font-semibold uppercase text-primary">
-          Section reviews
-        </p>
+        <p className="section-label">Section reviews</p>
         <h2 className="mt-2 text-3xl font-semibold tracking-normal">
           Resume sections
         </h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {sections.map((section) => (
-          <article key={section.section} className="app-card panel-hover rounded-xl p-5">
+          <article key={section.section} className="app-card rounded-xl p-5">
             <div className="flex items-start justify-between gap-4">
               <h3 className="text-xl font-semibold tracking-normal">
                 {section.section}

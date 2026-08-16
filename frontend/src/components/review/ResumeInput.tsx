@@ -40,7 +40,7 @@ export function ResumeInput({
     : 'resume-file-description'
 
   return (
-    <section className="app-card panel-hover rounded-xl p-5">
+    <section className="app-card rounded-xl p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-xl font-semibold tracking-normal">Resume</h2>
@@ -70,7 +70,7 @@ export function ResumeInput({
                 : 'Upload resume PDF'
             }
             className={cn(
-              'flex min-h-72 w-full flex-col items-center justify-center rounded-xl border border-dashed bg-muted/35 px-5 py-8 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+              'flex min-h-72 w-full flex-col items-center justify-center rounded-lg border border-dashed bg-muted/35 px-5 py-8 text-center transition-all hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
               isDragging && 'scale-[0.995] border-primary bg-primary/5',
               fileError && 'border-red-500',
             )}
@@ -95,7 +95,7 @@ export function ResumeInput({
             />
             {selectedFile ? (
               <>
-                <span className="mb-4 flex size-16 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
+                <span className="mb-4 flex size-16 items-center justify-center rounded-lg bg-foreground text-background shadow-sm">
                   <FileText className="size-7" aria-hidden="true" />
                 </span>
                 <span className="max-w-full truncate text-base font-semibold">
@@ -107,7 +107,7 @@ export function ResumeInput({
               </>
             ) : (
               <>
-                <span className="mb-4 flex size-16 items-center justify-center rounded-xl bg-card text-primary shadow-sm">
+                <span className="mb-4 flex size-16 items-center justify-center rounded-lg bg-card text-primary shadow-sm ring-1 ring-border">
                   <UploadCloud className="size-7" aria-hidden="true" />
                 </span>
                 <span className="text-base font-semibold">
@@ -159,7 +159,7 @@ export function ResumeInput({
             }
             aria-invalid={Boolean(resumeTextError)}
             className={cn(
-              'mt-2 min-h-72 w-full rounded-xl border bg-muted/30 px-4 py-3 leading-7 outline-none transition-colors focus:border-primary focus:bg-card focus:ring-2 focus:ring-ring/20',
+              'mt-2 min-h-72 w-full rounded-lg border bg-muted/30 px-4 py-3 leading-7 outline-none transition-colors focus:border-primary focus:bg-card focus:ring-2 focus:ring-ring/20',
               resumeTextError && 'border-red-500',
             )}
             placeholder="Paste your resume text here. Include experience, projects, education, and skills sections when possible."

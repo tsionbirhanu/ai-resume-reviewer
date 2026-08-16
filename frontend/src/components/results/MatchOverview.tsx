@@ -10,9 +10,7 @@ export function MatchOverview({ result }: MatchOverviewProps) {
     <section>
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase text-primary">
-            Match overview
-          </p>
+          <p className="section-label">Match overview</p>
           <h2 className="mt-2 text-3xl font-semibold tracking-normal">
             Scorecard
           </h2>

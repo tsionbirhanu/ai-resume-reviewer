@@ -12,13 +12,11 @@ export function AiSummaryCard({ result }: AiSummaryCardProps) {
   return (
     <section className="app-card rounded-xl p-6">
       <div className="flex gap-4">
-        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-foreground text-background shadow-sm">
           <Sparkles className="size-5" aria-hidden="true" />
         </span>
         <div>
-          <p className="text-sm font-semibold uppercase text-primary">
-            AI summary
-          </p>
+          <p className="section-label">AI summary</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-normal">
             {summary.title}
           </h2>

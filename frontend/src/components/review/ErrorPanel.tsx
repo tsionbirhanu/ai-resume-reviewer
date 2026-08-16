@@ -11,13 +11,13 @@ type ErrorPanelProps = {
 export function ErrorPanel({ error, onDismiss }: ErrorPanelProps) {
   return (
     <section
-      className="motion-rise-in rounded-md border border-red-200 bg-red-50 p-5 text-red-950 shadow-sm"
+      className="motion-rise-in rounded-xl border border-red-200 bg-red-50 p-5 text-red-950 shadow-sm"
       role="alert"
       aria-live="assertive"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-3">
-          <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-red-100">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-red-100">
             <AlertTriangle className="size-5" aria-hidden="true" />
           </span>
           <div>

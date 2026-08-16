@@ -18,14 +18,14 @@ const checks = [
 export function LoadingPanel() {
   return (
     <aside
-      className="motion-rise-in rounded-md border bg-[#0f172a] p-5 text-white shadow-sm"
+      className="motion-rise-in rounded-xl border bg-[#0b1220] p-5 text-white shadow-sm"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
       <div className="flex items-start gap-4">
-        <span className="relative flex size-11 items-center justify-center rounded-md bg-white text-[#0f172a]">
-          <span className="absolute inset-0 animate-ping rounded-md bg-white/30" />
+        <span className="relative flex size-11 items-center justify-center rounded-lg bg-white text-[#0f172a]">
+          <span className="absolute inset-0 animate-ping rounded-lg bg-white/30" />
           <BrainCircuit className="relative size-5" aria-hidden="true" />
         </span>
         <div>
@@ -45,7 +45,7 @@ export function LoadingPanel() {
           return (
             <div
               key={check.label}
-              className="flex items-center gap-3 rounded-md border border-white/15 px-3 py-3 text-sm text-slate-200"
+              className="flex items-center gap-3 rounded-lg border border-white/15 px-3 py-3 text-sm text-slate-200"
             >
               <Icon className="size-4 text-[#f2b84b]" aria-hidden="true" />
               {check.label}

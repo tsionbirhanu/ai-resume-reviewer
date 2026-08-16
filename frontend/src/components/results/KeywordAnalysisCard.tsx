@@ -13,9 +13,7 @@ export function KeywordAnalysisCard({
     <section className="app-card rounded-xl p-6">
       <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
-          <p className="text-sm font-semibold uppercase text-primary">
-            Keyword analysis
-          </p>
+          <p className="section-label">Keyword analysis</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-normal">
             Evidence-aware keyword coverage
           </h2>
@@ -23,7 +21,7 @@ export function KeywordAnalysisCard({
             {keywordAnalysis.notes}
           </p>
         </div>
-        <div className="grid gap-4 rounded-xl border bg-muted/30 p-4">
+        <div className="grid gap-4 rounded-lg border bg-muted/30 p-4">
           <KeywordGroup
             title="Matched"
             values={keywordAnalysis.matchedKeywords}
@@ -60,7 +58,10 @@ function KeywordGroup({
       {values.length ? (
         <div className="flex flex-wrap gap-2">
           {values.map((value) => (
-            <span key={`${title}-${value}`} className={`rounded-full border px-2.5 py-1 text-sm font-medium ${className}`}>
+            <span
+              key={`${title}-${value}`}
+              className={`rounded-md border px-2.5 py-1 text-sm font-medium ${className}`}
+            >
               {value}
             </span>
           ))}

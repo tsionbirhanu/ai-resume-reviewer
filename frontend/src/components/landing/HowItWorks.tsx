@@ -21,20 +21,18 @@ export function HowItWorks() {
     <section id="how-it-works" className="border-b bg-card">
       <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase text-[#c27200]">
-            How it works
-          </p>
+          <p className="section-label">How it works</p>
           <h2 className="mt-3 text-3xl font-semibold tracking-normal sm:text-4xl">
             Three inputs. One practical read on fit.
           </h2>
         </div>
-        <div className="mt-12 divide-y border-y lg:grid lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+        <div className="mt-12 grid gap-4 lg:grid-cols-3">
           {steps.map((step) => (
-            <article key={step.number} className="px-0 py-8 lg:px-8">
-              <span className="text-sm font-semibold text-primary">
+            <article key={step.number} className="quiet-panel rounded-xl p-6">
+              <span className="inline-flex size-10 items-center justify-center rounded-md bg-muted text-sm font-semibold text-primary">
                 {step.number}
               </span>
-              <h3 className="mt-4 text-2xl font-semibold tracking-normal">
+              <h3 className="mt-5 text-2xl font-semibold tracking-normal">
                 {step.title}
               </h3>
               <p className="mt-3 leading-7 text-muted-foreground">{step.copy}</p>

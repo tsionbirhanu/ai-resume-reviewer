@@ -33,7 +33,7 @@ export function ReviewProgress({
   ]
 
   return (
-    <ol className="grid gap-3 rounded-xl border bg-card p-3 shadow-sm sm:grid-cols-3">
+    <ol className="app-card grid min-w-0 gap-2 rounded-xl p-2 sm:grid-cols-3">
       {steps.map((step) => {
         const Icon = step.icon
         const StatusIcon = step.active ? CheckCircle2 : Circle
@@ -41,13 +41,13 @@ export function ReviewProgress({
         return (
           <li
             key={step.label}
-            className={`flex items-center gap-3 rounded-lg border px-3 py-3 transition-colors ${
+            className={`flex min-w-0 items-center gap-3 rounded-lg px-3 py-3 transition-colors ${
               step.active
-                ? 'border-primary/30 bg-primary/5 text-foreground'
-                : 'border-transparent bg-muted/45 text-muted-foreground'
+                ? 'bg-primary/[0.07] text-foreground'
+                : 'bg-muted/45 text-muted-foreground'
             }`}
           >
-            <span className="flex size-9 items-center justify-center rounded-md bg-card shadow-sm">
+            <span className="flex size-9 items-center justify-center rounded-md bg-card shadow-sm ring-1 ring-border">
               <Icon className="size-4" aria-hidden="true" />
             </span>
             <div className="min-w-0">

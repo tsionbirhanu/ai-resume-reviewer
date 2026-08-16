@@ -14,7 +14,7 @@ export function JobDescriptionInput({
   error,
 }: JobDescriptionInputProps) {
   return (
-    <section className="app-card panel-hover rounded-xl p-5">
+    <section className="app-card rounded-xl p-5">
       <div>
         <h2 className="text-xl font-semibold tracking-normal">Job description</h2>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
@@ -31,7 +31,7 @@ export function JobDescriptionInput({
         }
         aria-invalid={Boolean(error)}
         className={cn(
-          'mt-2 min-h-[24rem] w-full rounded-xl border bg-muted/30 px-4 py-3 leading-7 outline-none transition-colors focus:border-primary focus:bg-card focus:ring-2 focus:ring-ring/20',
+          'mt-2 min-h-[24rem] w-full rounded-lg border bg-muted/30 px-4 py-3 leading-7 outline-none transition-colors focus:border-primary focus:bg-card focus:ring-2 focus:ring-ring/20',
           error && 'border-red-500',
         )}
         placeholder="Paste the full job description, including responsibilities, required skills, preferred qualifications, and any domain-specific context."

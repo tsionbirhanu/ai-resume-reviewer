@@ -10,7 +10,7 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
   if (!improvements.length) {
     return (
       <section className="app-card rounded-xl p-6">
-        <p className="text-sm font-semibold uppercase text-primary">
+        <p className="section-label">
           Bullet improvements
         </p>
         <h2 className="mt-2 text-3xl font-semibold tracking-normal">
@@ -25,9 +25,9 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
   }
 
   return (
-    <section className="rounded-2xl border bg-[#0b1220] p-5 text-white shadow-[0_24px_80px_hsl(222_47%_9%/0.2)] sm:p-7">
+    <section className="rounded-xl border bg-[#0b1220] p-5 text-white shadow-[0_18px_48px_hsl(222_42%_9%/0.18)] sm:p-7">
       <div className="mb-6 max-w-3xl">
-        <p className="text-sm font-semibold uppercase text-[#f2b84b]">
+        <p className="text-sm font-semibold uppercase tracking-wider text-[#f2b84b]">
           Bullet improvements
         </p>
         <h2 className="mt-2 text-3xl font-semibold tracking-normal">
@@ -38,7 +38,7 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
         {improvements.map((improvement, index) => (
           <article
             key={`${improvement.original}-${index}`}
-            className="overflow-hidden rounded-xl border border-white/15 bg-white text-foreground shadow-xl shadow-black/10"
+            className="overflow-hidden rounded-lg border border-white/15 bg-white text-foreground shadow-xl shadow-black/10"
           >
             <div className="grid lg:grid-cols-[1fr_auto_1fr]">
               <BulletPanel

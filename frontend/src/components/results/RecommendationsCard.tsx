@@ -13,9 +13,7 @@ export function RecommendationsCard({
 
   return (
     <section className="app-card rounded-xl p-6">
-      <p className="text-sm font-semibold uppercase text-primary">
-        Recommendations
-      </p>
+      <p className="section-label">Recommendations</p>
       <div className="mt-5 grid gap-4 lg:grid-cols-3">
         {groups.map((group) => (
           <div key={group.title} className={`rounded-xl border p-4 ${group.tone}`}>

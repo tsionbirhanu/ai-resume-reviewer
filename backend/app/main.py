@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 import uvicorn
 from fastapi import FastAPI
@@ -16,7 +17,7 @@ def create_app() -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[settings.frontend_url],
+        allow_origins=get_allowed_origins(settings.frontend_url),
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -25,6 +26,25 @@ def create_app() -> FastAPI:
     app.include_router(health_router, prefix="/api")
     app.include_router(review_router, prefix="/api")
     return app
+
+
+def get_allowed_origins(frontend_url: str) -> list[str]:
+    parsed = urlparse(frontend_url)
+    scheme = parsed.scheme or "http"
+    port = f":{parsed.port}" if parsed.port else ""
+    configured_origin = f"{scheme}://{parsed.hostname}{port}" if parsed.hostname else frontend_url
+    origins = {configured_origin}
+
+    if parsed.hostname in {"localhost", "127.0.0.1", "::1"}:
+        origins.update(
+            {
+                f"{scheme}://localhost{port}",
+                f"{scheme}://127.0.0.1{port}",
+                f"{scheme}://[::1]{port}",
+            }
+        )
+
+    return sorted(origins)
 
 
 app = create_app()

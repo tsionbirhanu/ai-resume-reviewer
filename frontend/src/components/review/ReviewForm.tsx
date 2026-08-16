@@ -44,7 +44,8 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
   const resumeMode = watch('resumeMode')
   const resumeText = watch('resumeText') ?? ''
   const jobDescription = watch('jobDescription') ?? ''
-  const hasResume = resumeMode === 'file' ? Boolean(selectedFile) : resumeText.trim().length >= 50
+  const hasResume =
+    resumeMode === 'file' ? Boolean(selectedFile) : resumeText.trim().length >= 50
   const hasJobDescription = jobDescription.trim().length >= 100
 
   function handleModeChange(mode: 'file' | 'text') {
@@ -109,7 +110,7 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
   const submitDisabled = isSubmitting || isAnalyzing
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="grid min-w-0 gap-6">
       {apiError ? (
         <ErrorPanel error={apiError} onDismiss={() => setApiError(undefined)} />
       ) : null}
@@ -121,7 +122,7 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
       />
 
       <div
-        className="grid gap-6 lg:grid-cols-2 lg:items-start"
+        className="grid min-w-0 gap-6 lg:grid-cols-2 lg:items-start"
         data-testid="review-input-grid"
       >
         <ResumeInput
@@ -141,7 +142,7 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start">
+      <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
         <div className="app-card rounded-xl p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>

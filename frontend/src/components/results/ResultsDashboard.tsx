@@ -20,11 +20,9 @@ type ResultsDashboardProps = {
 export function ResultsDashboard({ onReset, result }: ResultsDashboardProps) {
   return (
     <div className="motion-rise-in grid gap-6" aria-live="polite">
-      <div className="app-card flex flex-col gap-4 rounded-xl p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 border-b pb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase text-primary">
-            Analysis complete
-          </p>
+          <p className="section-label">Analysis complete</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal sm:text-4xl">
             Resume match dashboard
           </h1>
