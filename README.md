@@ -1,35 +1,26 @@
 # AI Resume Reviewer
 
-AI Resume Reviewer is a full-stack MVP that compares a resume against a target job description and returns structured AI feedback on match quality, ATS compatibility, skill gaps, keyword coverage, section quality, bullet rewrites, and next-step recommendations.
+AI Resume Reviewer is a full-stack SaaS-style MVP that compares a resume against a target job description and returns structured AI feedback on fit, evidence, ATS-style keyword coverage, skill gaps, section quality, bullet rewrites, and next-step recommendations.
 
-This is intentionally scoped as a no-auth, no-database MVP. Resume content is processed in memory for the request and is not persisted.
+The app is intentionally lightweight: no authentication, no database, no queues, and no persistent resume storage. It is designed as a focused AI application architecture sample with a polished React workspace and a FastAPI backend that validates AI output before returning it to the browser.
 
-## Features
+## Highlights
 
 - Upload a PDF resume or paste resume text.
-- Paste a target job description.
+- Paste a target job description for role-specific analysis.
 - Extract PDF text with `pypdf`.
-- Generate a structured Gemini review response.
-- Validate AI output with Pydantic before returning it.
-- Render a polished dashboard with:
-  - Overall Match
-  - Estimated ATS compatibility
-  - Skills Match
-  - Experience Match
-  - AI summary
-  - Strengths
-  - Skill gaps
-  - Keyword analysis
-  - Section reviews
-  - Bullet improvements
-  - Priority-grouped recommendations
-- Friendly frontend error states for validation, network, unusable PDF text, oversized files, server errors, and AI provider failures.
+- Call Gemini through the official `google-genai` SDK.
+- Request structured JSON from the AI provider.
+- Validate the AI response with Pydantic before the frontend renders it.
+- Return consistent success and error response shapes.
+- Render a professional results dashboard with match scores, skill gaps, keyword analysis, section reviews, bullet improvements, and recommendations.
+- Keep API keys on the backend only.
 
 ## Tech Stack
 
-Frontend:
+### Frontend
 
-- React
+- React 19
 - Vite
 - TypeScript
 - Tailwind CSS
@@ -38,10 +29,9 @@ Frontend:
 - React Hook Form
 - Zod
 - React Router
-- Vitest
-- React Testing Library
+- Vitest + React Testing Library
 
-Backend:
+### Backend
 
 - FastAPI
 - Pydantic v2
@@ -55,36 +45,45 @@ Backend:
 
 ```mermaid
 flowchart TD
-  A[POST /api/review multipart form] --> B[Review Controller]
-  B --> C[Resume Parser Service]
-  B --> D[Review Service]
-  D --> E[Gemini Service]
-  E --> F[Google GenAI SDK]
-  F --> G[Structured JSON Response]
-  G --> H[Pydantic ResumeReviewResult Validation]
-  H --> E
-  E --> D
-  D --> B
-  B --> I[Frontend Results Dashboard]
+  A[React Review Form] --> B[POST /api/review multipart/form-data]
+  B --> C[FastAPI Review Route]
+  C --> D[Review Controller]
+  D --> E{Resume source}
+  E -->|PDF upload| F[Resume Parser Service]
+  E -->|Pasted text| G[Review Service]
+  F --> G
+  G --> H[Gemini Service]
+  H --> I[Google GenAI SDK]
+  I --> J[Structured JSON]
+  J --> K[Pydantic Validation]
+  K --> G
+  G --> D
+  D --> L[success/data response]
+  L --> M[React Results Dashboard]
+
+  C -. errors .-> N[Central Error Handler]
+  N --> O[success false error response]
 ```
 
 Request flow:
 
-1. The frontend submits `multipart/form-data` with either `resume` or `resume_text`, plus `job_description`.
-2. The controller validates the request shape.
-3. The parser extracts PDF text when a file is uploaded.
-4. The review service validates usable resume/job-description text and calls Gemini.
-5. Gemini is requested to return structured JSON.
-6. The backend validates the AI response with Pydantic.
-7. The frontend renders the validated dashboard or a friendly error state.
+1. The frontend submits a `multipart/form-data` request with either a PDF resume or pasted resume text, plus a job description.
+2. The backend validates the request shape and rejects invalid inputs early.
+3. If a PDF is provided, the parser extracts text and enforces PDF-only and file-size limits.
+4. The review service checks that the resume text and job description are usable.
+5. The Gemini service sends the prompt, resume text, and job description to Gemini.
+6. Gemini returns structured JSON.
+7. Pydantic validates the AI response schema and score bounds.
+8. The frontend renders the results dashboard or a friendly error state.
 
-## Folder Structure
+## Project Structure
 
 ```text
 AI_Resume_reviewer/
   backend/
     app/
-      api/routes/
+      api/
+        routes/
       controllers/
       core/
       middleware/
@@ -94,9 +93,10 @@ AI_Resume_reviewer/
       utils/
     scripts/
     tests/
-    .env
     .env.example
     requirements.txt
+    README.md
+
   frontend/
     src/
       assets/
@@ -112,11 +112,14 @@ AI_Resume_reviewer/
       types/
     package.json
     vite.config.ts
+    README.md
+
+  README.md
 ```
 
-## Environment Setup
+## Environment Variables
 
-Backend `.env`:
+Create `backend/.env` from `backend/.env.example`.
 
 ```env
 GEMINI_API_KEY=your_google_gemini_api_key
@@ -124,69 +127,82 @@ PORT=8000
 FRONTEND_URL=http://localhost:5173
 ```
 
-`GEMINI_API_KEY` is required at backend startup. The API fails fast if it is missing.
+`GEMINI_API_KEY` is required. The backend fails fast at startup if it is missing.
 
-## Install And Run
+## Installation
 
-Backend:
+### Backend
+
+From the project root:
 
 ```powershell
 cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Frontend:
+### Frontend
+
+From the project root:
 
 ```powershell
 cd frontend
 npm install
+```
+
+## Running Locally
+
+Start the backend:
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Start the frontend in a second terminal:
+
+```powershell
+cd frontend
 npm run dev
 ```
 
-Open:
+Open the app:
 
 ```text
 http://localhost:5173
 ```
 
-## Testing
+Health check:
 
-Backend:
-
-```powershell
-cd backend
-.\.venv\Scripts\Activate.ps1
-python -m pytest
+```text
+GET http://localhost:8000/api/health
 ```
 
-Frontend:
+Expected response:
 
-```powershell
-cd frontend
-npm run test
-npm run lint
-npm run build
+```json
+{
+  "status": "ok"
+}
 ```
 
 ## API Contract
 
-Endpoint:
+### `POST /api/review`
 
-```http
-POST /api/review
-Content-Type: multipart/form-data
-```
+Accepts `multipart/form-data`.
 
 Fields:
 
-- `resume`: optional PDF file. Use this or `resume_text`, not both.
-- `resume_text`: optional pasted resume text. Use this or `resume`, not both.
-- `job_description`: required target job description.
+- `resume`: optional PDF file. Use this when uploading a resume.
+- `resume_text`: optional string. Use this when pasting resume text.
+- `job_description`: required string.
 
-Example request:
+Exactly one resume source should be provided: either `resume` or `resume_text`.
+
+Example with a PDF:
 
 ```bash
 curl -X POST http://localhost:8000/api/review \
@@ -194,7 +210,15 @@ curl -X POST http://localhost:8000/api/review \
   -F "job_description=Paste the full job description here..."
 ```
 
-Success response:
+Example with pasted text:
+
+```bash
+curl -X POST http://localhost:8000/api/review \
+  -F "resume_text=Paste the resume text here..." \
+  -F "job_description=Paste the full job description here..."
+```
+
+### Success Response
 
 ```json
 {
@@ -204,34 +228,38 @@ Success response:
     "atsScore": 82,
     "skillsMatchScore": 91,
     "experienceMatchScore": 84,
-    "strengths": ["Strong evidence for the core stack."],
-    "matchedSkills": ["React", "FastAPI"],
-    "missingSkills": ["SaaS domain language"],
+    "strengths": ["Strong evidence for React and FastAPI experience."],
+    "matchedSkills": ["React", "TypeScript", "FastAPI"],
+    "missingSkills": ["Accessibility metrics"],
     "keywordAnalysis": {
-      "matchedKeywords": ["React"],
-      "missingKeywords": ["SaaS"],
-      "notes": "Good keyword coverage."
+      "matchedKeywords": ["React", "API design"],
+      "missingKeywords": ["WCAG"],
+      "notes": "The resume includes several role-relevant keywords with supporting evidence."
     },
     "sectionReviews": [
       {
         "section": "Experience",
         "score": 86,
-        "feedback": "Relevant evidence."
+        "feedback": "The experience section maps well to the role responsibilities."
       }
     ],
     "bulletImprovements": [
       {
         "original": "Built APIs.",
-        "improved": "Built FastAPI services.",
-        "reason": "More specific."
+        "improved": "Built FastAPI services with validated request contracts.",
+        "reason": "Adds specificity while preserving the original claim."
       }
     ],
-    "recommendations": ["Add a targeted summary."]
+    "recommendations": [
+      "Add a targeted summary that mirrors the role's core requirements."
+    ]
   }
 }
 ```
 
-Error response:
+### Error Response
+
+All handled errors use the same shape:
 
 ```json
 {
@@ -245,56 +273,82 @@ Error response:
 
 Status codes:
 
-- `200`: success
+- `200`: review completed successfully
 - `400`: invalid input
-- `413`: file too large
-- `422`: unusable extracted text or request validation
+- `413`: uploaded file is too large
+- `422`: unusable extracted text or validation failure
 - `500`: unexpected server error
 - `502`: AI provider failure
 
-## Validation Approach
+## Validation Strategy
 
-Frontend:
+Frontend validation:
 
 - React Hook Form manages form state.
-- Zod validates required fields and minimum lengths.
-- File checks validate PDF type and 5MB size before submission.
+- Zod validates required fields and minimum text lengths.
+- File checks reject non-PDF files and files over the size limit before submission.
 
-Backend:
+Backend validation:
 
-- Pydantic validates settings, request-level schemas, and Gemini output.
-- PDF upload validation enforces content type, extension, file size, readability, and minimum extracted text length.
-- Gemini output is schema-constrained where supported by the SDK, then validated again with Pydantic.
-- Centralized exception handlers return a consistent `{ success: false, error }` shape.
+- Pydantic Settings validates required environment variables.
+- Request schemas validate resume/job-description input requirements.
+- The resume parser enforces PDF-only uploads and file-size limits.
+- Gemini output is parsed and validated against strict Pydantic response models.
+- Centralized exception handlers normalize error responses and avoid leaking internal details.
 
-## Security Notes
+## Testing
 
-- `GEMINI_API_KEY` is loaded only by the backend and is never exposed to the frontend.
-- Resume content is not persisted.
-- There is no database in this MVP.
-- The app does not log resume contents or API keys.
-- Error responses avoid stack traces and internal exception details.
-- CORS is restricted to `FRONTEND_URL`.
+Run backend tests:
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1
+python -m pytest
+```
+
+Run frontend tests and checks:
+
+```powershell
+cd frontend
+npm run test
+npm run lint
+npm run build
+```
+
+## Security And Privacy Notes
+
+- `GEMINI_API_KEY` is loaded by the backend only.
+- The frontend never receives or stores the Gemini API key.
+- Resume content is processed for the current request and is not persisted by this MVP.
+- There is no database.
+- Server logs should not include resume contents or API keys.
+- Client-facing errors do not include stack traces or internal exception details.
+- CORS is restricted to the configured frontend URL and local loopback variants.
 
 ## Known Limitations
 
-- No user accounts or authentication.
-- No saved analysis history.
-- No database or persistent storage.
-- PDF extraction depends on embedded text; scanned/image-only PDFs may fail without OCR.
-- ATS score is an estimate, not an exact ATS simulation.
-- Gemini availability and quality depend on the configured provider key and model behavior.
-- No rate limiting or abuse protection yet.
+- No authentication or accounts.
+- No saved review history.
+- No database-backed persistence.
+- No rate limiting or abuse controls.
+- PDF extraction depends on embedded text; scanned/image-only PDFs may require OCR.
+- The ATS score is an estimate, not an exact ATS simulation.
+- AI output quality depends on the configured provider and model behavior.
+- The app is not a hiring decision system and should be treated as AI-assisted feedback.
 
 ## Future Improvements
 
-Not implemented in this MVP:
+The following ideas are not implemented in this MVP:
 
-- V2: Database-backed review history.
+- V2: Database-backed analysis history.
 - V2: User authentication and account management.
-- V2: Saved resumes, job descriptions, and result exports.
-- V3: Multi-model comparison across Gemini/OpenAI/Anthropic.
-- V3: Resume version history and before/after diffing.
-- V4: RAG over company/job-market knowledge.
-- V4: Role-specific coaching and interview prep.
-- V5: Career assistant workflows for applications, networking, and tailored cover letters.
+- V2: Saved resumes, job descriptions, and exportable reports.
+- V3: Multi-model comparison across Gemini, OpenAI, and Anthropic.
+- V3: Resume versioning with before/after diffs.
+- V4: RAG over company, role, or job-market knowledge.
+- V4: Career coaching and interview preparation workflows.
+- V5: Full career assistant for applications, networking, follow-ups, and tailored cover letters.
+
+## Disclaimer
+
+AI Resume Reviewer provides informational, AI-assisted feedback. It does not guarantee interviews, hiring outcomes, ATS ranking, or resume accuracy. Users should review all suggestions before applying them.
