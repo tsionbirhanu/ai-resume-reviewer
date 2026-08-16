@@ -10,9 +10,9 @@ export function AiSummaryCard({ result }: AiSummaryCardProps) {
   const summary = buildSummary(result)
 
   return (
-    <section className="rounded-md border bg-card p-6 shadow-sm">
+    <section className="app-card rounded-xl p-6">
       <div className="flex gap-4">
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-foreground text-background">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-foreground text-background shadow-sm">
           <Sparkles className="size-5" aria-hidden="true" />
         </span>
         <div>

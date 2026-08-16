@@ -4,7 +4,7 @@ import type {
   ResumeReviewResult,
 } from '@/types/review'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? getDefaultApiBaseUrl()
 
 type ReviewPayload = {
   resumeFile: File | null
@@ -127,4 +127,13 @@ function createFriendlyError({
       message: fallbackMessage,
     }),
   }
+}
+
+function getDefaultApiBaseUrl() {
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000'
+  }
+
+  const hostname = window.location.hostname || 'localhost'
+  return `http://${hostname}:8000`
 }

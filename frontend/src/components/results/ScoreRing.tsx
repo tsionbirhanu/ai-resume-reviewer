@@ -24,7 +24,7 @@ export function ScoreRing({
   const angle = clampedScore * 3.6
 
   return (
-    <article className="rounded-md border bg-card p-5 shadow-sm">
+    <article className="app-card panel-hover rounded-xl p-5">
       <div className="flex items-center gap-4">
         <div
           className="grid size-24 shrink-0 place-items-center rounded-full"
@@ -38,7 +38,7 @@ export function ScoreRing({
             </span>
           </div>
         </div>
-        <div>
+        <div className="min-w-0">
           <h3 className="text-base font-semibold tracking-normal">{label}</h3>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
             {description}

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { ErrorPanel } from '@/components/review/ErrorPanel'
 import { JobDescriptionInput } from '@/components/review/JobDescriptionInput'
 import { LoadingPanel } from '@/components/review/LoadingPanel'
+import { ReviewProgress } from '@/components/review/ReviewProgress'
 import { ResumeInput } from '@/components/review/ResumeInput'
 import { Button } from '@/components/ui/button'
 import { submitResumeReview } from '@/lib/api'
@@ -41,6 +42,10 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
   })
 
   const resumeMode = watch('resumeMode')
+  const resumeText = watch('resumeText') ?? ''
+  const jobDescription = watch('jobDescription') ?? ''
+  const hasResume = resumeMode === 'file' ? Boolean(selectedFile) : resumeText.trim().length >= 50
+  const hasJobDescription = jobDescription.trim().length >= 100
 
   function handleModeChange(mode: 'file' | 'text') {
     setValue('resumeMode', mode, { shouldValidate: true })
@@ -109,10 +114,20 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
         <ErrorPanel error={apiError} onDismiss={() => setApiError(undefined)} />
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+      <ReviewProgress
+        hasResume={hasResume}
+        hasJobDescription={hasJobDescription}
+        isAnalyzing={isAnalyzing}
+      />
+
+      <div
+        className="grid gap-6 lg:grid-cols-2 lg:items-start"
+        data-testid="review-input-grid"
+      >
         <ResumeInput
           mode={resumeMode}
           selectedFile={selectedFile}
+          textLength={resumeText.trim().length}
           textRegistration={register('resumeText')}
           resumeTextError={errors.resumeText?.message}
           fileError={fileError}
@@ -120,13 +135,14 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
           onFileChange={handleFileChange}
         />
         <JobDescriptionInput
+          characterCount={jobDescription.trim().length}
           registration={register('jobDescription')}
           error={errors.jobDescription?.message}
         />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start">
-        <div className="rounded-md border bg-card p-5 shadow-sm">
+        <div className="app-card rounded-xl p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-semibold tracking-normal">
@@ -137,7 +153,7 @@ export function ReviewForm({ onResult }: ReviewFormProps) {
                 ready.
               </p>
             </div>
-            <Button type="submit" className="h-12 px-5" disabled={submitDisabled}>
+            <Button type="submit" className="h-12 px-6" disabled={submitDisabled}>
               {submitDisabled ? 'Analyzing Resume' : 'Analyze Resume'}
               <ArrowRight className="size-4" aria-hidden="true" />
             </Button>

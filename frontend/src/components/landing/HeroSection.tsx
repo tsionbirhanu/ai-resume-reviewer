@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight, CheckCircle2, ShieldCheck, Target } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import heroImage from '@/assets/resume-match-hero.png'
@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button'
 export function HeroSection() {
   return (
     <section className="border-b bg-background">
-      <div className="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-[0.92fr_1.08fr] lg:py-20">
+      <div className="mx-auto grid min-h-[calc(100vh-73px)] max-w-7xl items-center gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:py-20">
         <div className="max-w-3xl">
-          <p className="mb-5 inline-flex items-center gap-2 rounded-md border bg-card px-3 py-1.5 text-sm font-medium text-muted-foreground">
+          <p className="mb-5 inline-flex items-center gap-2 rounded-full border bg-card px-3 py-1.5 text-sm font-semibold text-muted-foreground shadow-sm">
             <CheckCircle2 className="size-4 text-[#d08700]" aria-hidden="true" />
             Evidence-first resume matching
           </p>
@@ -32,14 +32,24 @@ export function HeroSection() {
               <a href="#how-it-works">See How It Works</a>
             </Button>
           </div>
+          <div className="mt-8 grid gap-3 text-sm text-muted-foreground sm:grid-cols-2">
+            <div className="flex items-center gap-2">
+              <Target className="size-4 text-primary" aria-hidden="true" />
+              Role-specific, not generic advice
+            </div>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="size-4 text-emerald-700" aria-hidden="true" />
+              Facts preserved in rewrite suggestions
+            </div>
+          </div>
         </div>
 
-        <div className="relative">
-          <div className="absolute -left-5 top-6 hidden h-[82%] w-8 bg-[#d08700] lg:block" />
+        <div className="relative rounded-[1.5rem] border bg-card p-3 shadow-[0_30px_90px_hsl(222_47%_9%/0.14)]">
+          <div className="absolute -left-3 top-10 hidden h-24 w-2 rounded-full bg-[#d08700] lg:block" />
           <img
             src={heroImage}
             alt="Resume and job description match analysis preview"
-            className="relative aspect-[16/11] w-full rounded-md border object-cover shadow-[0_24px_70px_hsl(222_34%_10%/0.18)]"
+            className="relative aspect-[16/11] w-full rounded-[1rem] border object-cover"
           />
         </div>
       </div>

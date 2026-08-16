@@ -9,7 +9,7 @@ type BulletImprovementsProps = {
 export function BulletImprovements({ improvements }: BulletImprovementsProps) {
   if (!improvements.length) {
     return (
-      <section className="rounded-md border bg-card p-6 shadow-sm">
+      <section className="app-card rounded-xl p-6">
         <p className="text-sm font-semibold uppercase text-primary">
           Bullet improvements
         </p>
@@ -25,7 +25,7 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
   }
 
   return (
-    <section className="rounded-md border bg-[#111827] p-5 text-white shadow-sm sm:p-7">
+    <section className="rounded-2xl border bg-[#0b1220] p-5 text-white shadow-[0_24px_80px_hsl(222_47%_9%/0.2)] sm:p-7">
       <div className="mb-6 max-w-3xl">
         <p className="text-sm font-semibold uppercase text-[#f2b84b]">
           Bullet improvements
@@ -38,7 +38,7 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
         {improvements.map((improvement, index) => (
           <article
             key={`${improvement.original}-${index}`}
-            className="overflow-hidden rounded-md border border-white/15 bg-white text-foreground"
+            className="overflow-hidden rounded-xl border border-white/15 bg-white text-foreground shadow-xl shadow-black/10"
           >
             <div className="grid lg:grid-cols-[1fr_auto_1fr]">
               <BulletPanel
@@ -46,7 +46,7 @@ export function BulletImprovements({ improvements }: BulletImprovementsProps) {
                 text={improvement.original}
                 muted
               />
-              <div className="hidden items-center justify-center border-x bg-[#111827] px-4 text-white lg:flex">
+              <div className="hidden items-center justify-center border-x bg-[#0b1220] px-4 text-white lg:flex">
                 <ArrowRight className="size-5" aria-hidden="true" />
               </div>
               <BulletPanel eyebrow="Improved" text={improvement.improved} />

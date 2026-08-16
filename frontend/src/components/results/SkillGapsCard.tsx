@@ -10,7 +10,7 @@ export function SkillGapsCard({
   missingSkills,
 }: SkillGapsCardProps) {
   return (
-    <section className="rounded-md border bg-card p-6 shadow-sm">
+    <section className="app-card rounded-xl p-6">
       <p className="text-sm font-semibold uppercase text-primary">Skill gaps</p>
       <div className="mt-5 grid gap-6 lg:grid-cols-2">
         <div>
@@ -53,7 +53,7 @@ function ChipGroup({
   return (
     <div className="flex flex-wrap gap-2">
       {values.map((value) => (
-        <span key={value} className={`rounded-md border px-3 py-1.5 text-sm ${classes}`}>
+        <span key={value} className={`rounded-full border px-3 py-1.5 text-sm font-medium ${classes}`}>
           {value}
         </span>
       ))}
