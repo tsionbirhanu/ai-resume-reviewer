@@ -1,22 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
+import { ErrorPanel } from '@/components/review/ErrorPanel'
 import { JobDescriptionInput } from '@/components/review/JobDescriptionInput'
 import { LoadingPanel } from '@/components/review/LoadingPanel'
 import { ResumeInput } from '@/components/review/ResumeInput'
 import { Button } from '@/components/ui/button'
+import { submitResumeReview } from '@/lib/api'
 import {
   reviewFormSchema,
   type ReviewFormValues,
 } from '@/lib/reviewValidation'
+import type { ResumeReviewResult, ReviewApiError } from '@/types/review'
 
-export function ReviewForm() {
+type ReviewFormProps = {
+  onResult: (result: ResumeReviewResult) => void
+}
+
+export function ReviewForm({ onResult }: ReviewFormProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string>()
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [stubMessage, setStubMessage] = useState<string>()
+  const [apiError, setApiError] = useState<ReviewApiError>()
   const {
     clearErrors,
     formState: { errors, isSubmitting },
@@ -38,7 +45,7 @@ export function ReviewForm() {
   function handleModeChange(mode: 'file' | 'text') {
     setValue('resumeMode', mode, { shouldValidate: true })
     setFileError(undefined)
-    setStubMessage(undefined)
+    setApiError(undefined)
     if (mode === 'text') {
       setSelectedFile(null)
     } else {
@@ -47,7 +54,7 @@ export function ReviewForm() {
   }
 
   function handleFileChange(file: File | null) {
-    setStubMessage(undefined)
+    setApiError(undefined)
 
     if (!file) {
       setSelectedFile(null)
@@ -71,8 +78,8 @@ export function ReviewForm() {
     setFileError(undefined)
   }
 
-  async function onSubmit(_values: ReviewFormValues) {
-    setStubMessage(undefined)
+  async function onSubmit(values: ReviewFormValues) {
+    setApiError(undefined)
 
     if (resumeMode === 'file' && !selectedFile) {
       setFileError('Upload a PDF resume or switch to pasted text.')
@@ -80,15 +87,28 @@ export function ReviewForm() {
     }
 
     setIsAnalyzing(true)
-    await new Promise((resolve) => window.setTimeout(resolve, 2400))
-    setIsAnalyzing(false)
-    setStubMessage('Input validated. Results will appear here when live analysis is connected.')
+    try {
+      const result = await submitResumeReview({
+        resumeFile: resumeMode === 'file' ? selectedFile : null,
+        resumeText: resumeMode === 'text' ? values.resumeText : undefined,
+        jobDescription: values.jobDescription,
+      })
+      onResult(result)
+    } catch (error) {
+      setApiError(error as ReviewApiError)
+    } finally {
+      setIsAnalyzing(false)
+    }
   }
 
   const submitDisabled = isSubmitting || isAnalyzing
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
+      {apiError ? (
+        <ErrorPanel error={apiError} onDismiss={() => setApiError(undefined)} />
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <ResumeInput
           mode={resumeMode}
@@ -122,12 +142,6 @@ export function ReviewForm() {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
           </div>
-          {stubMessage ? (
-            <p className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
-              <CheckCircle2 className="size-4" aria-hidden="true" />
-              {stubMessage}
-            </p>
-          ) : null}
         </div>
         {isAnalyzing ? <LoadingPanel /> : null}
       </div>
