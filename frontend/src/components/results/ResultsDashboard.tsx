@@ -19,7 +19,7 @@ type ResultsDashboardProps = {
 
 export function ResultsDashboard({ onReset, result }: ResultsDashboardProps) {
   return (
-    <div className="grid gap-6">
+    <div className="motion-rise-in grid gap-6" aria-live="polite">
       <div className="flex flex-col gap-4 rounded-md border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold uppercase text-primary">

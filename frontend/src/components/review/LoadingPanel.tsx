@@ -17,7 +17,12 @@ const checks = [
 
 export function LoadingPanel() {
   return (
-    <aside className="rounded-md border bg-[#0f172a] p-5 text-white shadow-sm">
+    <aside
+      className="motion-rise-in rounded-md border bg-[#0f172a] p-5 text-white shadow-sm"
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+    >
       <div className="flex items-start gap-4">
         <span className="relative flex size-11 items-center justify-center rounded-md bg-white text-[#0f172a]">
           <span className="absolute inset-0 animate-ping rounded-md bg-white/30" />

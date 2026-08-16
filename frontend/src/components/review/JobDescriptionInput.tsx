@@ -24,6 +24,10 @@ export function JobDescriptionInput({
       </label>
       <textarea
         id="job-description"
+        aria-describedby={
+          error ? 'job-description-error' : 'job-description-description'
+        }
+        aria-invalid={Boolean(error)}
         className={cn(
           'mt-2 min-h-[22rem] w-full rounded-md border bg-background px-4 py-3 leading-7 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-ring/20',
           error && 'border-red-500',
@@ -32,7 +36,16 @@ export function JobDescriptionInput({
         {...registration}
       />
       {error ? (
-        <p className="mt-2 text-sm font-medium text-red-600">{error}</p>
+        <p
+          id="job-description-error"
+          className="mt-2 text-sm font-medium text-red-600"
+        >
+          {error}
+        </p>
+      ) : (
+        <p id="job-description-description" className="mt-2 text-sm text-muted-foreground">
+          Minimum 100 characters. More context produces a better comparison.
+        </p>
       ) : null}
     </section>
   )
