@@ -1,0 +1,136 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { ArrowRight, CheckCircle2 } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import { JobDescriptionInput } from '@/components/review/JobDescriptionInput'
+import { LoadingPanel } from '@/components/review/LoadingPanel'
+import { ResumeInput } from '@/components/review/ResumeInput'
+import { Button } from '@/components/ui/button'
+import {
+  reviewFormSchema,
+  type ReviewFormValues,
+} from '@/lib/reviewValidation'
+
+export function ReviewForm() {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [fileError, setFileError] = useState<string>()
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [stubMessage, setStubMessage] = useState<string>()
+  const {
+    clearErrors,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    register,
+    setValue,
+    watch,
+  } = useForm<ReviewFormValues>({
+    resolver: zodResolver(reviewFormSchema),
+    defaultValues: {
+      resumeMode: 'file',
+      resumeText: '',
+      jobDescription: '',
+    },
+  })
+
+  const resumeMode = watch('resumeMode')
+
+  function handleModeChange(mode: 'file' | 'text') {
+    setValue('resumeMode', mode, { shouldValidate: true })
+    setFileError(undefined)
+    setStubMessage(undefined)
+    if (mode === 'text') {
+      setSelectedFile(null)
+    } else {
+      clearErrors('resumeText')
+    }
+  }
+
+  function handleFileChange(file: File | null) {
+    setStubMessage(undefined)
+
+    if (!file) {
+      setSelectedFile(null)
+      setFileError(undefined)
+      return
+    }
+
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      setSelectedFile(null)
+      setFileError('Choose a PDF file.')
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setSelectedFile(null)
+      setFileError('Choose a PDF that is 5MB or smaller.')
+      return
+    }
+
+    setSelectedFile(file)
+    setFileError(undefined)
+  }
+
+  async function onSubmit(_values: ReviewFormValues) {
+    setStubMessage(undefined)
+
+    if (resumeMode === 'file' && !selectedFile) {
+      setFileError('Upload a PDF resume or switch to pasted text.')
+      return
+    }
+
+    setIsAnalyzing(true)
+    await new Promise((resolve) => window.setTimeout(resolve, 2400))
+    setIsAnalyzing(false)
+    setStubMessage('Input validated. Results will appear here when live analysis is connected.')
+  }
+
+  const submitDisabled = isSubmitting || isAnalyzing
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+        <ResumeInput
+          mode={resumeMode}
+          selectedFile={selectedFile}
+          textRegistration={register('resumeText')}
+          resumeTextError={errors.resumeText?.message}
+          fileError={fileError}
+          onModeChange={handleModeChange}
+          onFileChange={handleFileChange}
+        />
+        <JobDescriptionInput
+          registration={register('jobDescription')}
+          error={errors.jobDescription?.message}
+        />
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-start">
+        <div className="rounded-md border bg-card p-5 shadow-sm">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold tracking-normal">
+                Ready to compare
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                Check your inputs, then start the resume analysis when you are
+                ready.
+              </p>
+            </div>
+            <Button type="submit" className="h-12 px-5" disabled={submitDisabled}>
+              {submitDisabled ? 'Analyzing Resume' : 'Analyze Resume'}
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Button>
+          </div>
+          {stubMessage ? (
+            <p className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
+              <CheckCircle2 className="size-4" aria-hidden="true" />
+              {stubMessage}
+            </p>
+          ) : null}
+        </div>
+        {isAnalyzing ? <LoadingPanel /> : null}
+      </div>
+    </form>
+  )
+}
